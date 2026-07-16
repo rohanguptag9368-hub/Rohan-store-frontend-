@@ -20,7 +20,7 @@ import SellerDashboard from "./Pages/SellerDashboard";
 
 import AdminDashboard from "./Pages/AdminDashboard";
 import AddProduct from "./Pages/AddSellerProduct";
-import SellerHub from "./pages/SellerHub";
+import SellerHub from "./Pages/SellerHub";
 import MySellerProduct from "./Pages/MySellerProduct";
 import EditSellerProduct from "./Pages/EditSellerProduct";
 import SellerOrder from "./Pages/SellerOrder";

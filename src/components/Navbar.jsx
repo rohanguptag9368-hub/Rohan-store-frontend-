@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Search, User, ShoppingCart, LogIn, Store } from "lucide-react";
+import {
+  Search,
+  ShoppingCart,
+  User,
+  LogIn,
+  Store,
+  Menu,
+  X,
+} from "lucide-react";
+
 import { useCart } from "./Cartcontext";
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const { cartItems } = useCart();
 
+  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -21,65 +31,83 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "auto";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [menuOpen]);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+
+    setMenuOpen(false);
 
     navigate("/login");
   };
 
   return (
     <>
-      <div
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+      <header
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-white/90 backdrop-blur-md shadow-2xl"
+            ? "bg-white/90 backdrop-blur-lg shadow-xl"
             : "bg-white"
         }`}
       >
         {/* Top Bar */}
-        <div className="bg-[#4f5f3d] text-white text-sm px-10 py-2 flex justify-between">
-          <div className="flex gap-6">
+
+        <div className="hidden lg:flex justify-between items-center bg-[#4f5f3d] text-white text-sm px-8 py-2">
+
+          <div className="flex items-center gap-6">
+
             <span>🛡 Premium Quality</span>
-            <span>|</span>
+
             <span>🏷 Best Prices</span>
-            <span>|</span>
+
             <span>🚚 Fast Delivery</span>
+
           </div>
 
-          <div>📞 Need Help? +91 9897691921</div>
+          <span>📞 +91 9897691921</span>
+
         </div>
 
         {/* Main Navbar */}
-        <nav
-          className={`px-10 flex justify-between items-center transition-all duration-500 ${
-            scrolled ? "py-3" : "py-5"
-          }`}
-        >
+
+        <nav className="max-w-7xl mx-auto h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+
           {/* Logo */}
-          <div>
-            <h1
-              className={`font-bold transition-all duration-500 ${
-                scrolled ? "text-3xl" : "text-4xl"
-              }`}
-            >
+
+          <NavLink to="/" className="select-none">
+
+            <h1 className="text-3xl md:text-4xl font-bold">
+
               Rohan <span className="text-[#4f5f3d]">Store</span>
+
             </h1>
 
-            <p className="text-gray-500 text-sm">
-              All Home Essentials
-            </p>
-          </div>
+            <p className="hidden sm:block text-sm text-gray-500">
 
-          {/* Links */}
-          <ul className="hidden md:flex gap-10 font-medium">
+              All Home Essentials
+
+            </p>
+
+          </NavLink>
+
+          {/* Desktop Links */}
+
+          <ul className="hidden lg:flex items-center gap-8 text-[16px] font-semibold">
+
             <li>
               <NavLink
                 to="/"
                 className={({ isActive }) =>
                   isActive
-                    ? "text-[#4f5f3d] border-b-2 border-[#4f5f3d] pb-2"
-                    : "hover:text-[#4f5f3d]"
+                    ? "text-[#4f5f3d]"
+                    : "hover:text-[#4f5f3d] transition"
                 }
               >
                 Home
@@ -91,8 +119,8 @@ export default function Navbar() {
                 to="/products"
                 className={({ isActive }) =>
                   isActive
-                    ? "text-[#4f5f3d] border-b-2 border-[#4f5f3d] pb-2"
-                    : "hover:text-[#4f5f3d]"
+                    ? "text-[#4f5f3d]"
+                    : "hover:text-[#4f5f3d] transition"
                 }
               >
                 Products
@@ -104,8 +132,8 @@ export default function Navbar() {
                 to="/categories"
                 className={({ isActive }) =>
                   isActive
-                    ? "text-[#4f5f3d] border-b-2 border-[#4f5f3d] pb-2"
-                    : "hover:text-[#4f5f3d]"
+                    ? "text-[#4f5f3d]"
+                    : "hover:text-[#4f5f3d] transition"
                 }
               >
                 Categories
@@ -117,11 +145,11 @@ export default function Navbar() {
                 to="/about"
                 className={({ isActive }) =>
                   isActive
-                    ? "text-[#4f5f3d] border-b-2 border-[#4f5f3d] pb-2"
-                    : "hover:text-[#4f5f3d]"
+                    ? "text-[#4f5f3d]"
+                    : "hover:text-[#4f5f3d] transition"
                 }
               >
-                About Us
+                About
               </NavLink>
             </li>
 
@@ -130,102 +158,121 @@ export default function Navbar() {
                 to="/contact"
                 className={({ isActive }) =>
                   isActive
-                    ? "text-[#4f5f3d] border-b-2 border-[#4f5f3d] pb-2"
-                    : "hover:text-[#4f5f3d]"
+                    ? "text-[#4f5f3d]"
+                    : "hover:text-[#4f5f3d] transition"
                 }
               >
                 Contact
               </NavLink>
             </li>
-          </ul>
 
-          {/* Right Side */}
-          <div className="flex items-center gap-5">
+          </ul>
+                    {/* Right Side */}
+
+          <div className="flex items-center gap-2 md:gap-3">
 
             {/* Search */}
+
             <NavLink to="/search">
               {({ isActive }) => (
-                <Search
-                  size={40}
-                  className={`cursor-pointer p-2 rounded-full transition ${
+                <button
+                  className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 ${
                     isActive
                       ? "bg-[#4f5f3d] text-white"
-                      : "hover:bg-[#4f5f3d] hover:text-white"
+                      : "hover:bg-[#4f5f3d] hover:text-white hover:scale-105"
                   }`}
-                />
+                >
+                  <Search size={24} strokeWidth={2.3} />
+                </button>
               )}
             </NavLink>
 
-            {/* Login / User */}
             {!user ? (
               <>
-                <NavLink to="/login">
-                  {({ isActive }) => (
-                    <LogIn
-                      size={40}
-                      className={`cursor-pointer p-2 rounded-full transition ${
-                        isActive
-                          ? "bg-[#4f5f3d] text-white"
-                          : "hover:bg-[#4f5f3d] hover:text-white"
-                      }`}
-                    />
-                  )}
-                </NavLink>
+                {/* Login */}
 
                 <NavLink
-                  to="/register"
+                  to="/login"
                   className={({ isActive }) =>
-                    `px-4 py-2 rounded-lg font-semibold transition ${
+                    `hidden lg:flex items-center gap-2 px-5 h-11 rounded-xl font-semibold transition-all duration-300 ${
                       isActive
                         ? "bg-[#4f5f3d] text-white"
                         : "border border-[#4f5f3d] text-[#4f5f3d] hover:bg-[#4f5f3d] hover:text-white"
                     }`
                   }
                 >
+                  <LogIn size={20} />
+                  Login
+                </NavLink>
+
+                {/* Register */}
+
+                <NavLink
+                  to="/register"
+                  className={({ isActive }) =>
+                    `hidden xl:flex items-center px-5 h-11 rounded-xl font-semibold transition-all duration-300 ${
+                      isActive
+                        ? "bg-[#4f5f3d] text-white"
+                        : "bg-[#4f5f3d] text-white hover:bg-[#445624]"
+                    }`
+                  }
+                >
                   Register
                 </NavLink>
+
+                {/* Seller */}
+
                 <NavLink
-                to="/seller"
-                className={({ isActive }) =>
-              `flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition ${
-                 isActive
-        ? "bg-[#4f5f3d] text-white"
-        : "border border-[#4f5f3d] text-[#4f5f3d] hover:bg-[#4f5f3d] hover:text-white"
-    }`
-  }
->
-  <Store size={18} />
-  Seller Hub
-</NavLink>
+                  to="/seller"
+                  className={({ isActive }) =>
+                    `hidden xl:flex items-center gap-2 px-5 h-11 rounded-xl font-semibold transition-all duration-300 ${
+                      isActive
+                        ? "bg-[#4f5f3d] text-white"
+                        : "border border-[#4f5f3d] text-[#4f5f3d] hover:bg-[#4f5f3d] hover:text-white"
+                    }`
+                  }
+                >
+                  <Store size={20} />
+                  Seller Hub
+                </NavLink>
               </>
             ) : (
               <>
-                <span className="font-semibold text-[#4f5f3d]">
+                <span className="hidden xl:block font-semibold text-[#4f5f3d]">
                   Hello, {user.name}
                 </span>
 
+                {/* Profile */}
+
                 <NavLink to="/profile">
                   {({ isActive }) => (
-                    <User
-                      size={40}
-                      className={`cursor-pointer p-2 rounded-full transition ${
+                    <button
+                      className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 ${
                         isActive
                           ? "bg-[#4f5f3d] text-white"
-                          : "hover:bg-[#4f5f3d] hover:text-white"
+                          : "hover:bg-[#4f5f3d] hover:text-white hover:scale-105"
                       }`}
-                    />
+                    >
+                      <User size={24} strokeWidth={2.3} />
+                    </button>
                   )}
                 </NavLink>
+
+                {/* Seller */}
+
                 <NavLink
-                to="/seller/dashboard"
-                 className="border border-[#4f5f3d] text-[#4f5f3d] px-4 py-2 rounded-lg hover:bg-[#4f5f3d] hover:text-white transition flex items-center gap-2"
-                 >
-                 <Store size={18} />
-                 Seller Hub
-                 </NavLink>
+                  to="/seller/dashboard"
+                  className="hidden lg:flex items-center gap-2 border border-[#4f5f3d] text-[#4f5f3d] px-5 h-11 rounded-xl font-semibold hover:bg-[#4f5f3d] hover:text-white transition-all duration-300"
+                >
+                  <Store size={20} />
+                  Seller Hub
+                </NavLink>
+
+                {/* Logout */}
+
                 <button
                   onClick={handleLogout}
-                  className="bg-[#556B2F] hover:bg-[#445624] text-white px-5 py-3 rounded-xl transition-all duration-300"
+                  className="hidden lg:flex items-center justify-center h-11 px-5 rounded-xl bg-[#4f5f3d] text-white font-semibold hover:bg-[#445624] transition-all duration-300"
                 >
                   Logout
                 </button>
@@ -233,20 +280,22 @@ export default function Navbar() {
             )}
 
             {/* Cart */}
+
             <NavLink to="/cart">
               {({ isActive }) => (
                 <div className="relative">
-                  <ShoppingCart
-                    size={40}
-                    className={`cursor-pointer p-2 rounded-full transition ${
+                  <button
+                    className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 ${
                       isActive
                         ? "bg-[#4f5f3d] text-white"
-                        : "hover:bg-[#4f5f3d] hover:text-white"
+                        : "hover:bg-[#4f5f3d] hover:text-white hover:scale-105"
                     }`}
-                  />
+                  >
+                    <ShoppingCart size={24} strokeWidth={2.3} />
+                  </button>
 
                   {cartItems.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center">
                       {cartItems.length}
                     </span>
                   )}
@@ -254,9 +303,210 @@ export default function Navbar() {
               )}
             </NavLink>
 
+            {/* Mobile Menu */}
+
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="lg:hidden w-12 h-12 flex items-center justify-center rounded-xl hover:bg-gray-100 transition-all duration-300"
+            >
+              {menuOpen ? (
+                <X size={30} strokeWidth={2.3} />
+              ) : (
+                <Menu size={30} strokeWidth={2.3} />
+              )}
+            </button>
+
           </div>
+
         </nav>
-      </div>
+                {/* ================= Mobile Drawer ================= */}
+
+        {menuOpen && (
+          <>
+            {/* Overlay */}
+
+            <div
+              onClick={() => setMenuOpen(false)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
+            />
+
+            {/* Drawer */}
+
+            <div
+              className={`fixed top-0 right-0 h-screen w-[85%] max-w-[360px] bg-white shadow-2xl z-50 transition-transform duration-300 ${
+                menuOpen ? "translate-x-0" : "translate-x-full"
+              }`}
+            >
+              {/* Header */}
+
+              <div className="flex items-center justify-between px-6 py-5 border-b">
+
+                <div>
+
+                  <h2 className="text-2xl font-bold">
+                    Rohan <span className="text-[#4f5f3d]">Store</span>
+                  </h2>
+
+                  <p className="text-sm text-gray-500">
+                    All Home Essentials
+                  </p>
+
+                </div>
+
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  className="w-11 h-11 rounded-full hover:bg-gray-100 flex items-center justify-center transition"
+                >
+                  <X size={28} />
+                </button>
+
+              </div>
+
+              {/* Links */}
+
+              <div className="py-3">
+
+                <NavLink
+                  to="/"
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-6 py-4 font-medium transition ${
+                      isActive
+                        ? "bg-[#4f5f3d] text-white"
+                        : "hover:bg-gray-100"
+                    }`
+                  }
+                >
+                  Home
+                </NavLink>
+
+                <NavLink
+                  to="/products"
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-6 py-4 font-medium transition ${
+                      isActive
+                        ? "bg-[#4f5f3d] text-white"
+                        : "hover:bg-gray-100"
+                    }`
+                  }
+                >
+                  Products
+                </NavLink>
+
+                <NavLink
+                  to="/categories"
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-6 py-4 font-medium transition ${
+                      isActive
+                        ? "bg-[#4f5f3d] text-white"
+                        : "hover:bg-gray-100"
+                    }`
+                  }
+                >
+                  Categories
+                </NavLink>
+
+                <NavLink
+                  to="/about"
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-6 py-4 font-medium transition ${
+                      isActive
+                        ? "bg-[#4f5f3d] text-white"
+                        : "hover:bg-gray-100"
+                    }`
+                  }
+                >
+                  About
+                </NavLink>
+
+                <NavLink
+                  to="/contact"
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-6 py-4 font-medium transition ${
+                      isActive
+                        ? "bg-[#4f5f3d] text-white"
+                        : "hover:bg-gray-100"
+                    }`
+                  }
+                >
+                  Contact
+                </NavLink>
+
+                <div className="border-t mt-3 pt-3"></div>
+                                {!user ? (
+                  <>
+                    <NavLink
+                      to="/login"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-6 py-4 hover:bg-gray-100 transition"
+                    >
+                      <LogIn size={20} />
+                      Login
+                    </NavLink>
+
+                    <NavLink
+                      to="/register"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-6 py-4 hover:bg-gray-100 transition"
+                    >
+                      <User size={20} />
+                      Register
+                    </NavLink>
+
+                    <NavLink
+                      to="/seller"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-6 py-4 hover:bg-gray-100 transition"
+                    >
+                      <Store size={20} />
+                      Seller Hub
+                    </NavLink>
+                  </>
+                ) : (
+                  <>
+                    <div className="px-6 py-4 border-b bg-gray-50">
+                      <p className="text-sm text-gray-500">Welcome</p>
+                      <p className="font-semibold text-[#4f5f3d]">
+                        {user.name}
+                      </p>
+                    </div>
+
+                    <NavLink
+                      to="/profile"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-6 py-4 hover:bg-gray-100 transition"
+                    >
+                      <User size={20} />
+                      Profile
+                    </NavLink>
+
+                    <NavLink
+                      to="/seller/dashboard"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-6 py-4 hover:bg-gray-100 transition"
+                    >
+                      <Store size={20} />
+                      Seller Dashboard
+                    </NavLink>
+
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-3 w-full px-6 py-4 text-red-600 hover:bg-red-50 transition"
+                    >
+                      <LogIn size={20} />
+                      Logout
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </>
+        )}
+      </header>
     </>
   );
 }

@@ -75,10 +75,13 @@ const ProductDetails = () => {
         <div>
 
           <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-[500px] object-cover rounded-xl shadow-lg"
-          />
+  src={product.image.replace(
+    "http://localhost:5000",
+    "https://rohan-backend-55cz.onrender.com"
+  )}
+  alt={product.name}
+  className="w-full h-[500px] object-cover rounded-xl shadow-lg"
+/>
 
         </div>
 

@@ -14,10 +14,13 @@ export default function ProductCard({ product }) {
 
         <div className="h-64 overflow-hidden">
           <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-cover hover:scale-110 transition duration-500"
-          />
+           src={product.image.replace(
+           "http://localhost:5000",
+           "https://rohan-backend-55cz.onrender.com"
+           )}
+           alt={product.name}
+           className="w-full h-full object-cover hover:scale-110 transition duration-500"
+/>
         </div>
 
         <div className="p-5">
